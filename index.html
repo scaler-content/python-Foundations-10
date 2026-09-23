@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class 10 Post-Read · Object-Oriented Programming</title>
+<style>
+:root{
+  --stock:#E7E0CC;--stock-face:#FBF8EF;--ink:#2B2620;--ink-soft:#5B5347;
+  --tab-red:#A8382E;--tab-teal:#3E6E62;--tab-mustard:#B8842A;
+  --line:#D8CFB4;--good:#3E6E62;--bad:#A8382E;--shadow:3px 4px 0 rgba(43,38,32,.14);
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;background:var(--stock);background-image:radial-gradient(rgba(43,38,32,.03) 1px,transparent 1px);background-size:14px 14px;color:var(--ink);font-family:Arial,sans-serif;line-height:1.55;padding:0 0 80px}
+code,.mono,pre{font-family:"Courier New",monospace}
+h1,h2,h3,.tab-label{font-family:Georgia,serif;font-weight:400}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px}
+header.masthead{padding:52px 20px 28px;max-width:720px;margin:0 auto}
+.kicker{font-family:"Courier New",monospace;font-size:.78rem;color:var(--ink-soft);margin:0 0 10px}
+h1{font-size:2.1rem;margin:0 0 6px;line-height:1.25}
+.sub{color:var(--ink-soft);font-size:1.02rem;max-width:56ch;margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:10px 18px;margin:22px 0 0;padding:14px 16px;background:var(--stock-face);border:1px solid var(--line);font-size:.86rem;color:var(--ink-soft)}
+.scope{margin:34px auto 46px;max-width:720px;padding:20px 20px 20px 22px;background:var(--stock-face);border-left:5px solid var(--tab-red);box-shadow:var(--shadow)}
+.scope h2{font-size:1rem;margin:0 0 8px;color:var(--tab-red)} .scope p{margin:0}
+.card{position:relative;max-width:720px;margin:0 auto 40px;background:var(--stock-face);border:1px solid var(--line);box-shadow:var(--shadow)}
+.card-tab{position:absolute;top:-16px;left:24px;padding:5px 12px;color:#fff;font-size:.82rem;font-family:"Courier New",monospace;box-shadow:2px 2px 0 rgba(43,38,32,.18)}
+.card-body{padding:34px 26px 26px}.card h3{font-size:1.28rem;margin:0 0 14px}.card p{margin:0 0 14px}
+.analogy,.takeaway,.note{padding:14px 16px;margin:16px 0;font-size:.95rem}
+.analogy{background:#F2ECD8;border:1px dashed var(--tab-mustard)}
+.analogy .label,.takeaway .label,.note .label{font-weight:600;font-size:.8rem;font-family:"Courier New",monospace;margin-bottom:4px;display:block}
+.analogy .label{color:var(--tab-mustard)} .takeaway{background:#EAF1EE;border-left:4px solid var(--tab-teal)}
+.takeaway .label{color:var(--tab-teal)} .note{background:#F6E9E7;border-left:4px solid var(--tab-red)}
+.note .label{color:var(--tab-red)}
+pre{background:#26221D;color:#EDE6D2;padding:14px 16px;overflow-x:auto;font-size:.88rem;margin:14px 0;line-height:1.5}
+pre .out{color:#8FBBA9}
+details.predict{margin:16px 0;border:1px solid var(--line);background:#fff}
+details.predict summary{cursor:pointer;padding:12px 14px;font-family:"Courier New",monospace;font-size:.88rem;color:var(--tab-teal);list-style:none}
+details.predict summary::-webkit-details-marker{display:none}
+details.predict summary:before{content:"▸";margin-right:8px} details.predict[open] summary:before{content:"▾"}
+details.predict .reveal{padding:0 14px 16px;border-top:1px solid var(--line);padding-top:12px}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:"Courier New",monospace;font-size:.78rem;color:var(--ink-soft);font-weight:600;border-bottom:2px solid var(--ink)}
+.vote-box{border:1px solid var(--line);background:#fff;padding:16px;margin:16px 0}
+.vote-btns,.choice-btns{display:flex;gap:10px;margin:10px 0;flex-wrap:wrap}
+.vote-btns button,.choice-btns button{flex:1;min-width:100px;font-family:"Courier New",monospace;padding:10px;background:var(--stock);border:1px solid var(--ink);cursor:pointer}
+.vote-btns button:hover,.choice-btns button:hover{background:var(--ink);color:var(--stock-face)}
+.vote-tally{font-size:.82rem;color:var(--ink-soft);font-family:"Courier New",monospace}
+.vote-result{display:none;margin-top:12px}.vote-result.show{display:block}
+.terms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:8px}
+.flip{perspective:800px;height:110px;cursor:pointer}.flip-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.flipped .flip-inner{transform:rotateY(180deg)}
+.flip-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border:1px solid var(--ink);display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-size:.85rem}
+.flip-front{background:var(--stock-face);font-family:"Courier New",monospace;font-weight:600}
+.flip-back{background:var(--ink);color:var(--stock-face);transform:rotateY(180deg);font-size:.76rem;line-height:1.4}
+.feedback{display:none;margin-top:10px;padding:9px 11px}.feedback.show{display:block}
+.feedback.correct{background:#EAF1EE;color:var(--good);border-left:3px solid var(--good)}
+.feedback.wrong{background:#F6E9E7;color:var(--bad);border-left:3px solid var(--bad)}
+.trace{width:100%;border-collapse:collapse}.trace td{padding:7px 9px}.trace td:last-child{text-align:right;font-family:"Courier New",monospace;font-weight:600}
+.mental{background:#26221D;color:#EDE6D2;padding:16px;font-family:"Courier New",monospace;font-size:.82rem;line-height:1.5;white-space:pre;overflow-x:auto;margin:16px 0;text-align:center}
+footer{text-align:center;max-width:720px;margin:20px auto;color:var(--ink-soft);font-size:.84rem}
+@media(max-width:600px){h1{font-size:1.6rem}.card-body{padding:30px 18px 20px}.vote-btns button{min-width:0}.mental{font-size:.72rem}}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <p class="kicker">DSML · Post-Read · Class 10</p>
+  <h1>Object-Oriented Programming</h1>
+  <p class="sub">A card-by-card walkthrough to lock in classes, objects, <code>__init__</code>, <code>self</code>, class vs. instance variables, inheritance, and the four OOP pillars.</p>
+  <div class="legend">
+    <span>🔮 predict before revealing</span><span>💬 debrief</span><span>🤖 AI moment</span><span>✅ takeaway</span>
+  </div>
+</header>
+
+<div class="scope">
+  <h2>What this post-read covers</h2>
+  <p>Why classes exist; classes vs. objects; <code>__init__</code> and <code>self</code>; instance attributes and methods; class variables vs. instance variables (and the shared-mutable-list bug); encapsulation; abstraction; inheritance and <code>super()</code>; method overriding; polymorphism; and a cumulative mini project.</p>
+</div>
+
+<div class="wrap">
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-red)">01 · the idea</div><div class="card-body">
+<h3>What if we need to track 50 dogs, not one?</h3>
+<p>Suppose we're building a program to track dogs at a shelter — each dog has a name, a breed, and an age. We could store one dog like this:</p>
+<pre>dog_name = "Rex"
+dog_breed = "Labrador"
+dog_age = 3</pre>
+<details class="predict"><summary>🔮 Before you reveal: now imagine tracking 50 dogs. What starts to go wrong with this approach?</summary><div class="reveal">
+<p>A separate set of variables per dog, no clean way to loop over "all dogs," and no obvious way to attach behavior — like making a dog bark — to one specific dog. What we really want is a single "thing" that bundles a dog's data <em>and</em> its behavior together, and lets us create as many of these things as we need. That's exactly what a <strong>class</strong> gives us.</p>
+</div></details>
+<div class="takeaway"><span class="label">✅ Takeaway</span>A class lets you bundle related data and behavior into one reusable definition, instead of juggling separate variables per thing you're tracking.</div>
+</div></div>
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-teal)">02 · classes &amp; objects</div><div class="card-body">
+<h3>The blueprint idea</h3>
+<p>A <strong>class</strong> is a blueprint — it describes what a dog looks like in general, without being any particular dog. An <strong>object</strong> is one actual dog, built from that blueprint. We call each object an <strong>instance</strong> of the class.</p>
+<div class="analogy"><span class="label">Mental model</span>A blueprint for a house doesn't limit you to building only one house. You can make as many instances as you want from the same class.</div>
+<div class="takeaway"><span class="label">✅ Takeaway</span>Class = the blueprint/definition. Object (instance) = one thing built from that blueprint. Every object from the same class shares the same structure, but holds its own data.</div>
+</div></div>
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-mustard)">03 · creating a class</div><div class="card-body">
+<h3>The most basic class definition</h3>
+<pre>class Dog:
+    pass</pre>
+<table><tr><th>Piece</th><th>What it does</th></tr>
+<tr><td><code>class</code></td><td>Tells Python we're defining a new type of thing.</td></tr>
+<tr><td><code>Dog</code></td><td>The class name (capitalized, by convention).</td></tr>
+<tr><td><code>:</code></td><td>Starts the class body.</td></tr>
+<tr><td><code>pass</code></td><td>A placeholder meaning "nothing here yet."</td></tr>
+</table>
+<p><code>pass</code> is the same keyword from the Loops class — it means "this block needs something here syntactically, but I have nothing to put yet."</p>
+</div></div>
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-red)">04 · creating objects</div><div class="card-body">
+<h3>Are two dogs from the same class the same thing?</h3>
+<details class="predict"><summary>🔮 Predict before revealing: are <code>rex</code> and <code>fido</code> the same object, or two separate ones?</summary><div class="reveal">
+<pre>class Dog:
+    pass
+
+rex = Dog()
+fido = Dog()
+
+print(rex)
+print(fido)
+print(rex == fido)
+
+<span class="out">&lt;__main__.Dog object at 0x7f3a1c0a4d90&gt;
+&lt;__main__.Dog object at 0x7f3a1c0a4e10&gt;
+False</span></pre>
+<p>(Addresses will vary.) Each call to <code>Dog()</code> builds a brand-new, independent object. Two dogs made from the same class are still two separate things — exactly like two houses built from the same blueprint.</p>
+</div></details>
+<div class="takeaway"><span class="label">✅ Takeaway</span>Calling <code>Dog()</code> creates a new, independent object every time — even if it comes from the exact same class.</div>
+</div></div>
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-teal)">05 · the __init__ constructor</div><div class="card-body">
+<h3>Giving every object a starting state</h3>
+<p>Right now our <code>Dog</code> objects don't hold any data — they're empty. We want every dog to start with a name and a breed the moment it's created. That's what <code>__init__</code> is for — it runs automatically every time you create a new object.</p>
+<pre>class Dog:
+    def __init__(self, name, breed):
+        self.name = name
+        self.breed = breed</pre>
+<details class="predict"><summary>🔮 Predict both lines before running</summary><div class="reveal">
+<pre>rex = Dog("Rex", "Labrador")
+
+print(rex.name)
+print(rex.breed)
+
+<span class="out">Rex
+Labrador</span></pre>
+</div></details>
+<div class="note"><span class="label">📌 Note</span><code>__init__</code> is called automatically — you never write <code>rex.__init__(...)</code> yourself. Writing <code>Dog("Rex", "Labrador")</code> is what triggers it, with <code>self</code> filled in by Python.</div>
+</div></div>
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-mustard)">06 · understanding self</div><div class="card-body">
+<h3>The most confusing word in this class</h3>
+<p><code>self</code> simply means: "the specific object this method is being run on." When you write <code>rex.bark()</code>, Python quietly passes <code>rex</code> in as <code>self</code> — you never type it yourself when calling a method, only when defining one.</p>
+<details class="predict"><summary>🔮 Both objects were built from the same __init__ code — will rex.name and fido.name be the same value or different?</summary><div class="reveal">
+<pre>class Dog:
+    def __init__(self, name):
+        self.name = name
+
+rex = Dog("Rex")
+fido = Dog("Fido")
+
+print(rex.name)
+print(fido.name)
+
+<span class="out">Rex
+Fido</span></pre>
+<p>Same <code>__init__</code> code ran twice, but <code>self.name = name</code> pointed at a <em>different</em> <code>self</code> each time — that's the whole trick behind <code>self</code>.</p>
+</div></details>
+<div class="takeaway"><span class="label">✅ Takeaway</span><code>self</code> isn't a Python keyword — it's the near-universal convention for naming the first parameter of a method, and it refers to whichever object called that method.</div>
+</div></div>
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-red)">07 · instance attributes</div><div class="card-body">
+<h3>Data that belongs to one specific object</h3>
+<p>Values stored using <code>self.</code> inside <code>__init__</code> (or any method) are called <strong>instance attributes</strong> — they belong to one specific object.</p>
+<pre>rex = Dog("Rex")
+
+rex.age = 3   # can also add an attribute directly, after creation
+print(rex.age)</pre>
+<div class="note"><span class="label">📌 Note</span>Setting attributes directly like this works, but it's fragile — if you forget to set <code>rex.age</code> before reading it, you'll get an <code>AttributeError</code>. Setting every attribute inside <code>__init__</code> guarantees every object starts complete.</div>
+</div></div>
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-teal)">08 · methods</div><div class="card-body">
+<h3>Functions that live inside a class</h3>
+<p>A method is just a function defined inside a class — and like <code>__init__</code>, it always takes <code>self</code> as its first parameter.</p>
+<pre>class Dog:
+    def __init__(self, name):
+        self.name = name
+
+    def bark(self):
+        print(f"{self.name} says Woof!")</pre>
+<details class="predict"><summary>🔮 Predict the output before running</summary><div class="reveal">
+<pre>rex = Dog("Rex")
+
+rex.bark()
+
+<span class="out">Rex says Woof!</span></pre>
+<p><code>bark(self)</code> reads <code>self.name</code> to get "Rex" specifically — the method's behavior depends on which object called it, which is the entire point of putting it inside the class.</p>
+</div></details>
+</div></div>
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-mustard)">09 · attributes + methods together</div><div class="card-body">
+<h3>Methods can change an object's own state</h3>
+<pre>class Dog:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def describe(self):
+        return f"{self.name} is {self.age} years old."
+
+    def have_birthday(self):
+        self.age += 1</pre>
+<details class="predict"><summary>🔮 Predict both describe() outputs — has age changed between them?</summary><div class="reveal">
+<pre>rex = Dog("Rex", 3)
+
+print(rex.describe())
+
+rex.have_birthday()
+
+print(rex.describe())
+
+<span class="out">Rex is 3 years old.
+Rex is 4 years old.</span></pre>
+<p><code>have_birthday()</code> modifies <code>self.age</code> directly — methods can change an object's own attributes, which is how objects keep track of state over time.</p>
+</div></details>
+</div></div>
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-red)">10 · class vs. instance variables</div><div class="card-body">
+<h3>Data shared by every object vs. data unique to one</h3>
+<p>Everything stored so far — <code>name</code>, <code>age</code> — belongs to one specific dog. Those are <strong>instance variables</strong>. Sometimes, though, a piece of data is true for every object of a class, not just one. For that, we use a <strong>class variable</strong> — written directly in the class body, not inside <code>__init__</code>.</p>
+<details class="predict"><summary>🔮 Both dogs share the same class — will species match for both?</summary><div class="reveal">
+<pre>class Dog:
+    species = "Canis familiaris"   # class variable — same for every dog
+
+    def __init__(self, name):
+        self.name = name   # instance variable — unique per dog
+
+rex = Dog("Rex")
+fido = Dog("Fido")
+
+print(rex.species)
+print(fido.species)
+
+<span class="out">Canis familiaris
+Canis familiaris</span></pre>
+<p>This feels perfectly safe, and it is — <code>species</code> is a string, and strings are immutable. Reassigning <code>rex.species = "..."</code> would just create a new instance variable that shadows the class one for <code>rex</code> specifically, leaving <code>fido</code> untouched. The danger shows up with a different kind of value.</p>
+</div></details>
+</div></div>
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-teal)">11 · when class variables go wrong — the vote</div><div class="card-body">
+<h3>The most counterintuitive idea in this class</h3>
+<div class="vote-box">
+<p><strong>After rex learns a trick, will fido's tricks list also show "sit," or will it stay empty?</strong></p>
+<pre>class Dog:
+    tricks = []   # class variable — a list, this time
+
+    def __init__(self, name):
+        self.name = name
+
+rex = Dog("Rex")
+fido = Dog("Fido")
+
+rex.tricks.append("sit")
+
+print(rex.tricks)
+print(fido.tricks)</pre>
+<div class="vote-btns"><button type="button" onclick="tricksVote('empty')">fido's list stays empty</button><button type="button" onclick="tricksVote('sit')">fido's list also shows "sit"</button></div>
+<p class="vote-tally" id="tricksTally"></p><div class="vote-result" id="tricksResult">
+<p>💬 The output is:</p>
+<pre><span class="out">['sit']
+['sit']</span></pre>
+<p><code>fido</code> never learned anything — we only called <code>rex.tricks.append("sit")</code>. But there's only ever <em>one</em> <code>tricks</code> list. It belongs to the <code>Dog</code> class itself, not to <code>rex</code> or <code>fido</code> individually — every dog is just looking at the exact same list. When <code>rex.tricks.append("sit")</code> ran, it modified that one shared list in place — the same way <code>.append()</code> mutates a list directly. <code>fido</code> isn't broken. <code>fido.tricks</code> was never its own list to begin with.</p>
+</div></div>
+<div class="note"><span class="label">🤖 AI moment</span>If you guessed fido's list would stay empty, paste this into a general-purpose AI assistant: <em>"I expected fido.tricks to stay empty since I only modified rex.tricks, but it changed too. Walk me through exactly why, step by step."</em> Then independently verify: rewrite the class so each dog gets its own list (see the next card) and confirm <code>rex.tricks.append("sit")</code> no longer affects <code>fido.tricks</code>.</div>
+<div class="takeaway"><span class="label">✅ Takeaway</span>Every instance of a class shares one copy of a mutable class variable unless each object is given its own inside <code>__init__</code>. This is one of the most common real bugs in beginner (and professional) Python OOP code.</div>
+</div></div>
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-mustard)">12 · fixing it</div><div class="card-body">
+<h3>Mutable defaults belong in __init__</h3>
+<p>The fix is to give each object its own list, created fresh inside <code>__init__</code>:</p>
+<details class="predict"><summary>🔮 Has moving the list into __init__ changed the outcome?</summary><div class="reveal">
+<pre>class Dog:
+    def __init__(self, name):
+        self.name = name
+        self.tricks = []   # instance variable now — a brand-new list per dog
+
+rex = Dog("Rex")
+fido = Dog("Fido")
+
+rex.tricks.append("sit")
+
+print(rex.tricks)
+print(fido.tricks)
+
+<span class="out">['sit']
+[]</span></pre>
+</div></details>
+<div class="takeaway"><span class="label">✅ Takeaway</span>Use a class variable for data that's genuinely the same for every object (like a constant). Use <code>self.x = ...</code> inside <code>__init__</code> for anything that should belong to one object individually — especially anything mutable, like a list or dictionary.</div>
+</div></div>
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-red)">13 · encapsulation</div><div class="card-body">
+<h3>Bundling data with the methods that control access to it</h3>
+<p>Encapsulation means bundling data and the methods that work on it together, and controlling how that data is accessed from outside the class. In Python, a leading double underscore signals "this is internal, please don't touch it directly."</p>
+<pre>class BankAccount:
+    def __init__(self, balance):
+        self.__balance = balance   # double underscore
+
+    def get_balance(self):
+        return self.__balance
+
+    def deposit(self, amount):
+        if amount > 0:
+            self.__balance += amount</pre>
+<details class="predict"><summary>🔮 Predict the output</summary><div class="reveal">
+<pre>account = BankAccount(100)
+
+account.deposit(50)
+
+print(account.get_balance())
+
+<span class="out">150</span></pre>
+</div></details>
+<details class="predict"><summary>🔮 We used get_balance() instead of reading __balance directly. Does the double underscore actually block direct access, or does something else happen?</summary><div class="reveal">
+<pre>print(account.__balance)
+
+<span class="out">AttributeError: 'BankAccount' object has no attribute '__balance'</span></pre>
+<p>Python doesn't have true private attributes the way some other languages do. A double-underscore name actually gets internally renamed to <code>_BankAccount__balance</code> — a process called <strong>name mangling</strong> — which is why the direct name lookup fails. It's still technically reachable as <code>account._BankAccount__balance</code>, but that's exactly the point: encapsulation in Python is a strong convention and a speed bump, not an unbreakable lock.</p>
+</div></details>
+<div class="takeaway"><span class="label">✅ Takeaway</span>Encapsulation restricts direct access to data — the <code>deposit()</code> method exists so nobody needs to reach around it in the first place.</div>
+</div></div>
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-teal)">14 · abstraction</div><div class="card-body">
+<h3>Hiding complexity behind a simple name</h3>
+<p>Abstraction means hiding complicated internal steps behind a simple method name — the caller just needs to know what to call, not how it works inside.</p>
+<pre>account.deposit(50)</pre>
+<p>Whoever calls <code>account.deposit(50)</code> doesn't need to know that it checks <code>amount &gt; 0</code>, or how <code>__balance</code> is stored internally. They just need to know: call <code>deposit()</code>, give it an amount, done. That's abstraction — a simple interface hiding the messy details behind it.</p>
+<div class="note"><span class="label">📌 Note</span>Encapsulation and abstraction work together but aren't identical: encapsulation restricts direct access to data; abstraction presents a simple interface regardless of how complex the internals are.</div>
+</div></div>
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-mustard)">15 · inheritance</div><div class="card-body">
+<h3>Reusing another class's code</h3>
+<p>Suppose we want a <code>Manager</code> class and a <code>Developer</code> class — both are employees, and both share things like a name and a salary. Writing that shared code twice would be wasteful. <strong>Inheritance</strong> lets a class reuse another class's attributes and methods.</p>
+<pre>class Employee:
+    def __init__(self, name, salary):
+        self.name = name
+        self.salary = salary
+
+    def describe(self):
+        return f"{self.name} is an employee."
+
+class Manager(Employee):
+    pass</pre>
+<details class="predict"><summary>🔮 Manager has no __init__ or describe() of its own — do these lines work at all, and if so, what do they print?</summary><div class="reveal">
+<pre>mgr = Manager("Asha", 90000)
+
+print(mgr.name)
+print(mgr.describe())
+
+<span class="out">Asha
+Asha is an employee.</span></pre>
+</div></details>
+<div class="takeaway"><span class="label">✅ Takeaway</span><code>Manager(Employee)</code> means "Manager inherits from Employee." Everything Employee can do, Manager can do too, automatically — without writing a single line of new code.</div>
+</div></div>
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-red)">16 · the super() function</div><div class="card-body">
+<h3>Letting the parent class finish its own setup</h3>
+<p>Manager didn't need its own <code>__init__</code> because it doesn't add anything new yet. But what if Manager needs an extra piece of data Employee doesn't have — like <code>team_size</code>?</p>
+<pre>class Manager(Employee):
+    def __init__(self, name, salary, team_size):
+        super().__init__(name, salary)   # let Employee set up name and salary
+        self.team_size = team_size</pre>
+<details class="predict"><summary>🔮 Predict both lines before running</summary><div class="reveal">
+<pre>mgr = Manager("Asha", 90000, 5)
+
+print(mgr.name)
+print(mgr.team_size)
+
+<span class="out">Asha
+5</span></pre>
+</div></details>
+<div class="takeaway"><span class="label">✅ Takeaway</span><code>super().__init__(name, salary)</code> calls Employee's own <code>__init__</code> on this same object, so name and salary get set up exactly the way Employee already knows how to do it. Manager's <code>__init__</code> then only has to handle what's actually new. Forgetting this line is a very common mistake.</div>
+</div></div>
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-teal)">17 · method overriding</div><div class="card-body">
+<h3>Replacing a method entirely</h3>
+<p>A subclass can also replace a method entirely, instead of just adding new attributes.</p>
+<pre>class Manager(Employee):
+    def __init__(self, name, salary, team_size):
+        super().__init__(name, salary)
+        self.team_size = team_size
+
+    def describe(self):
+        return f"{self.name} manages a team of {self.team_size}."</pre>
+<details class="predict"><summary>🔮 Employee also has a describe() method — which version runs: Employee's, or Manager's?</summary><div class="reveal">
+<pre>mgr = Manager("Asha", 90000, 5)
+
+print(mgr.describe())
+
+<span class="out">Asha manages a team of 5.</span></pre>
+</div></details>
+<div class="takeaway"><span class="label">✅ Takeaway</span>This is called overriding — Manager's own <code>describe()</code> takes priority over Employee's version, for any Manager object specifically. Python always checks the object's own class first before looking at the parent.</div>
+</div></div>
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-mustard)">18 · polymorphism</div><div class="card-body">
+<h3>Same method name, different behavior</h3>
+<p>Polymorphism means "many forms" — the same method name behaving differently depending on which object it's called on. We've actually already built this:</p>
+<pre>class Developer(Employee):
+    def __init__(self, name, salary, language):
+        super().__init__(name, salary)
+        self.language = language
+
+    def describe(self):
+        return f"{self.name} writes code in {self.language}."</pre>
+<details class="predict"><summary>🔮 The loop calls .describe() the exact same way for every item — predict both lines of output</summary><div class="reveal">
+<pre>employees = [Manager("Asha", 90000, 5), Developer("Rahul", 75000, "Python")]
+
+for emp in employees:
+    print(emp.describe())
+
+<span class="out">Asha manages a team of 5.
+Rahul writes code in Python.</span></pre>
+</div></details>
+<div class="note"><span class="label">🤖 AI moment</span>Before asking AI anything, write one sentence yourself: why use inheritance here instead of three completely separate, unrelated classes? Then ask a general-purpose AI assistant the same question and compare. As a check, try removing the inheritance relationship entirely (independent classes, each with their own <code>name</code>/<code>salary</code>/<code>describe()</code>) — the loop above still works the same way, since Python's polymorphism only cares that <code>emp.describe()</code> exists, not that the objects share a parent class.</div>
+<div class="takeaway"><span class="label">✅ Takeaway</span>The loop never checks "is this a Manager or a Developer?" — it just calls <code>emp.describe()</code> and trusts each object to know how to describe itself correctly.</div>
+</div></div>
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-red)">19 · mini project</div><div class="card-body">
+<h3>Employee Management System</h3>
+<p>Now combine every idea from this class into one small, realistic program: an <code>Employee</code> base class with a name, a private salary, and a <code>describe()</code> method; a <code>Manager</code> subclass adding <code>team_size</code>; a <code>Developer</code> subclass adding <code>language</code>; and a list holding a mix of employees, described uniformly through one loop.</p>
+<pre>class Employee:
+    def __init__(self, name, salary):
+        self.name = name
+        self.__salary = salary
+
+    def get_salary(self):
+        return self.__salary
+
+    def describe(self):
+        return f"{self.name} is an employee."
+
+
+class Manager(Employee):
+    def __init__(self, name, salary, team_size):
+        super().__init__(name, salary)
+        self.team_size = team_size
+
+    def describe(self):
+        return f"{self.name} manages a team of {self.team_size}."
+
+
+class Developer(Employee):
+    def __init__(self, name, salary, language):
+        super().__init__(name, salary)
+        self.language = language
+
+    def describe(self):
+        return f"{self.name} writes code in {self.language}."</pre>
+<details class="predict"><summary>🔮 Predict all six lines of output — three describe() lines and three salary lines, in order</summary><div class="reveal">
+<pre>employees = [
+    Manager("Asha", 90000, 5),
+    Developer("Rahul", 75000, "Python"),
+    Employee("Priya", 60000),
+]
+
+for emp in employees:
+    print(emp.describe())
+    print("Salary:", emp.get_salary())
+
+<span class="out">Asha manages a team of 5.
+Salary: 90000
+Rahul writes code in Python.
+Salary: 75000
+Priya is an employee.
+Salary: 60000</span></pre>
+</div></details>
+<div class="takeaway"><span class="label">✅ Takeaway</span>This program uses every core idea from this class: classes and objects, <code>__init__</code> and <code>self</code>, inheritance with <code>super()</code>, method overriding, polymorphism in the loop, and encapsulation through <code>get_salary()</code> instead of touching <code>__salary</code> directly.</div>
+</div></div>
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-teal)">20 · final recap</div><div class="card-body">
+<h3>The one idea to leave with</h3>
+<div class="mental">     CLASS (blueprint)
+            │
+    ┌───────┴───────┐
+    ↓               ↓
+ __init__        methods
+(starting        (behavior,
+ state, via         via self)
+ self)
+    │               │
+    └───────┬───────┘
+            ↓
+        OBJECT
+     (one instance,
+      own data)</div>
+<p>A class is a blueprint; an object is one specific thing built from it. <code>__init__</code> runs automatically when an object is created, and <code>self</code> refers to the specific object a method is running on. Class variables are shared by every object — fine for constants, dangerous for anything mutable, since every object ends up looking at the exact same one. Inheritance lets a class reuse another class's code, <code>super()</code> lets a subclass still run the parent's setup, and overriding lets a subclass replace a method entirely. Polymorphism means the same method call can behave differently depending on the object. And encapsulation and abstraction both hide complexity — encapsulation restricts direct access to data, abstraction presents a simple interface regardless of internal complexity.</p>
+<div class="takeaway"><span class="label">✅ Takeaway</span>OOP is about bundling data and behavior together, and controlling how that bundle is built, shared, extended, and used.</div>
+</div></div>
+
+<div class="card">
+<div class="card-tab" style="background:var(--tab-mustard)">21 · quick revision</div><div class="card-body">
+<h3>Key terms — tap to flip</h3>
+<div class="terms-grid" id="termsGrid"></div>
+</div></div>
+
+</div>
+
+<footer>Class 10 · Object-Oriented Programming — post-read</footer>
+
+<script>
+const tricksVotes={a:0,b:0};
+function tricksVote(choice){
+  tricksVotes[choice==='empty'?'a':'b']++;
+  document.getElementById('tricksTally').textContent=`Votes — stays empty: ${tricksVotes.a}, also shows "sit": ${tricksVotes.b}`;
+  document.getElementById('tricksResult').classList.add('show');
+}
+const terms=[
+['class','A blueprint that describes what a type of object looks like.'],
+['object / instance','One specific thing built from a class.'],
+['__init__','Runs automatically when a new object is created; sets up its starting state.'],
+['self','Refers to the specific object a method is currently running on.'],
+['instance attribute','Data stored with self. — unique to one object.'],
+['class variable','Data written in the class body — shared by every object of that class.'],
+['method','A function defined inside a class; always takes self first.'],
+['encapsulation','Bundling data with its methods and restricting direct access to that data.'],
+['abstraction','Hiding complex internals behind a simple method name.'],
+['inheritance','A class reusing another class\u2019s attributes and methods.'],
+['super()','Calls the parent class\u2019s own method (often __init__) on the current object.'],
+['overriding','A subclass replacing a parent method with its own version.'],
+['polymorphism','The same method call behaving differently depending on the object.']
+];
+const grid=document.getElementById('termsGrid');
+terms.forEach(([term,def])=>{
+ const el=document.createElement('div'); el.className='flip';
+ el.innerHTML=`<div class="flip-inner"><div class="flip-face flip-front">${term}</div><div class="flip-face flip-back">${def}</div></div>`;
+ el.addEventListener('click',()=>el.classList.toggle('flipped'));
+ grid.appendChild(el);
+});
+</script>
+</body>
+</html>
